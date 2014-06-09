@@ -1,79 +1,69 @@
 # Blocks
-tile.frame.frame.name=传送门框架
+tile.frame.frame.name=传送门边框
 tile.frame.controller.name=传送门控制器
 tile.frame.redstone.name=红石接口
-tile.frame.networkInterface.name=网络接口
-tile.frame.dialDevice.name=拨号设备
-tile.frame.biometric.name=生物辨识器
+tile.frame.network_interface.name=网络接口
+tile.frame.dial_device.name=拨号设备
+tile.frame.program_interface.name=可编程接口
 tile.frame.upgrade.name=模块操作器
 tile.frame.fluid.name=液体传输模块
 tile.frame.item.name=物品传输模块
 tile.frame.energy.name=能量传输模块
 tile.portal.name=传送门
-tile.stabilizer.name=位面之桥稳定器(DBS)
-tile.decoration.frame.name=镶边石英
-tile.decoration.stabilizer.name=稳定器
-tile.crafting.name=位面之桥稳定器 (空)
+tile.dbs.name=位面桥接稳定器(DBS)
+tile.dbs_empty.name=位面桥接稳定器 (空)
+tile.decor_dbs.name=融入末影的金属块
+tile.decor_frame.name=镶边石英
 
 # Block Misc
-ep3.block.portalFramePart=传送门框架部分
+ep3.block.portalFramePart=传送门边框部分
 ep3.block.multiblockStructure=多方块结构
-ep3.block.dbsSize=2x3x2 to 2x3x256
-ep3.block.eachRowAddsToTheMaximum=每行增加到最大数量
-ep3.block.activePortalConnections=激活传送门连接
+ep3.block.dbsSize=2x3x2 至 2x3x256
 ep3.block.decorativeBlock=装饰方块
 
 # Items
 item.wrench.name=扳手
-item.nanobrush.name=纳米刷子
+item.nanobrush.name=纳米刷
 item.glasses.name=护目镜
-item.locationCard.name=定位卡片
-item.synchronizer.name=同步器
-item.entityCard.name=ID卡
-item.scanner.name=手持扫描仪
-item.miscItems.blankPortalModule.name=空白传送门模块
-item.miscItems.blankUpgrade.name=空白升级
-item.guide.name=增强传送门手册
-
-# Items Misc
-ep3.item.charge=充能:
-ep3.item.scanned=扫描:
-ep3.item.contains=包含:
-ep3.item.andMore=及更多%s...
+item.location_card.name=定位卡片
+item.blank_portal_module.name=空白传送门模块
+item.blank_upgrade.name=空白升级
+item.manual.name=冒险家的增强传送门指南
 
 # In-place upgrades
 item.upgrade.redstone.name=红石接口升级
-item.upgrade.networkInterface.name=网络接口升级
-item.upgrade.dialDevice.name=拨号设备升级
-item.upgrade.biometric.name=生物辨识器升级
+item.upgrade.network_interface.name=网络接口升级
+item.upgrade.dial_device.name=拨号设备升级
+item.upgrade.program_interface.name=可编程接口升级
 item.upgrade.upgrade.name=模块操作器升级
 item.upgrade.fluid.name=液体传输升级
 item.upgrade.item.name=物品传输升级
 item.upgrade.energy.name=能量传输升级
 
 # Upgrades
-item.portalModule.0.name=粒子湮灭模块
-item.portalModule.0.desc=使传送门不再散发出粒子
-item.portalModule.1.name=彩虹粒子模块
-item.portalModule.1.desc=每个粒子都会有随机颜色
-item.portalModule.2.name=传送门静音模块
-item.portalModule.2.desc=消除传送门音效
-item.portalModule.3.name=动量模块
-item.portalModule.3.desc=实体经过传送门保持原有动量
-item.portalModule.4.name=传送门隐匿模块
-item.portalModule.4.desc=使得传送门完全隐形
-item.portalModule.5.name=粒子阴影模块
-item.portalModule.5.desc=散发的粒子忽明忽暗
-item.portalModule.6.name=虚空框架 [过时]
-item.portalModule.6.desc=我不再做任何事。
-item.portalModule.7.name=羽落模块
-item.portalModule.7.desc=消除掉落伤害
+item.portal_module.0.name=粒子湮灭模块
+item.portal_module.0.desc=使传送门不再散发出粒子
+item.portal_module.1.name=彩虹粒子模块
+item.portal_module.1.desc=每个粒子都会有随机颜色
+item.portal_module.2.name=传送门静音模块
+item.portal_module.2.desc=消除传送门音效
+item.portal_module.3.name=动量模块
+item.portal_module.3.desc=实体经过传送门保持原有动量
+item.portal_module.4.name=传送门隐匿模块
+item.portal_module.4.desc=使得传送门完全隐形
+item.portal_module.5.name=粒子阴影模块
+item.portal_module.5.desc=散发的粒子忽明忽暗
+item.portal_module.6.name=朝向模块
+item.portal_module.6.desc=传送后的朝向
+item.portal_module.7.name=羽落模块
+item.portal_module.7.desc=消除掉落伤害
+ep3.gui.facing.0=北
+ep3.gui.facing.1=东
+ep3.gui.facing.2=南
+ep3.gui.facing.3=西
 
 # Creative Tab
-itemGroup.EnhancedPortals3=增强传送门3
-
-# GUI Handheld Scanner
-ep3.gui.scanner=手持扫描器
+itemGroup.enhancedportals=增强传送门3
 
 # GUI DBS
 ep3.gui.dimensionalBridgeStabilizer=位面之桥稳定器(DBS)
