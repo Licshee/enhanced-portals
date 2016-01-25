@@ -1,14 +1,23 @@
 package enhancedportals.network;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.ArrayList;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.config.Configuration;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.block.BlockDecorBorderedQuartz;
 import enhancedportals.block.BlockDecorEnderInfusedMetal;
@@ -16,6 +25,7 @@ import enhancedportals.block.BlockFrame;
 import enhancedportals.block.BlockPortal;
 import enhancedportals.block.BlockStabilizer;
 import enhancedportals.block.BlockStabilizerEmpty;
+import enhancedportals.crafting.ThermalExpansion;
 import enhancedportals.crafting.Vanilla;
 import enhancedportals.item.ItemBlankPortalModule;
 import enhancedportals.item.ItemBlankUpgrade;
@@ -34,30 +44,45 @@ import enhancedportals.network.packet.PacketRequestGui;
 import enhancedportals.network.packet.PacketRerender;
 import enhancedportals.network.packet.PacketTextureData;
 import enhancedportals.portal.NetworkManager;
-import enhancedportals.tileentity.TileController;
-import enhancedportals.tileentity.TileDiallingDevice;
-import enhancedportals.tileentity.TileFrameBasic;
-import enhancedportals.tileentity.TileModuleManipulator;
-import enhancedportals.tileentity.TileNetworkInterface;
-import enhancedportals.tileentity.TilePortal;
-import enhancedportals.tileentity.TileProgrammableInterface;
-import enhancedportals.tileentity.TileRedstoneInterface;
-import enhancedportals.tileentity.TileStabilizer;
-import enhancedportals.tileentity.TileStabilizerMain;
-import enhancedportals.tileentity.TileTransferEnergy;
-import enhancedportals.tileentity.TileTransferFluid;
-import enhancedportals.tileentity.TileTransferItem;
+import enhancedportals.tile.TileController;
+import enhancedportals.tile.TileDialingDevice;
+import enhancedportals.tile.TileFrameBasic;
+import enhancedportals.tile.TileNetworkInterface;
+import enhancedportals.tile.TilePortal;
+import enhancedportals.tile.TilePortalManipulator;
+import enhancedportals.tile.TileRedstoneInterface;
+import enhancedportals.tile.TileStabilizer;
+import enhancedportals.tile.TileStabilizerMain;
+import enhancedportals.tile.TileTransferEnergy;
+import enhancedportals.tile.TileTransferFluid;
+import enhancedportals.tile.TileTransferItem;
 
 public class CommonProxy
 {
-    public static final int REDSTONE_FLUX_COST = 10000, REDSTONE_FLUX_TIMER = 20, RF_PER_MJ = 10;
+    public static final int REDSTONE_FLUX_COST = 10000, REDSTONE_FLUX_TIMER = 20;
     public int gogglesRenderIndex = 0;
     public NetworkManager networkManager;
-    public static boolean forceShowFrameOverlays, disableSounds, disableParticles, portalsDestroyBlocks, fasterPortalCooldown, requirePower;
+    public static boolean forceShowFrameOverlays, disableSounds, disableParticles, portalsDestroyBlocks, fasterPortalCooldown, requirePower, updateNotifier, vanillaRecipes, teRecipes;
     public static double powerMultiplier, powerStorageMultiplier;
     public static int activePortalsPerRow = 2;
     static Configuration config;
     static File craftingDir;
+    public static String lateVers;
+
+    public void waitForController(ChunkCoordinates controller, ChunkCoordinates frame)
+    {
+
+    }
+
+    public ArrayList<ChunkCoordinates> getControllerList(ChunkCoordinates controller)
+    {
+        return null;
+    }
+
+    public void clearControllerList(ChunkCoordinates controller)
+    {
+
+    }
 
     public File getBaseDir()
     {
@@ -118,9 +143,8 @@ public class CommonProxy
         GameRegistry.registerTileEntity(TileController.class, "epPC");
         GameRegistry.registerTileEntity(TileRedstoneInterface.class, "epRI");
         GameRegistry.registerTileEntity(TileNetworkInterface.class, "epNI");
-        GameRegistry.registerTileEntity(TileDiallingDevice.class, "epDD");
-        GameRegistry.registerTileEntity(TileProgrammableInterface.class, "epPI");
-        GameRegistry.registerTileEntity(TileModuleManipulator.class, "epMM");
+        GameRegistry.registerTileEntity(TileDialingDevice.class, "epDD");
+        GameRegistry.registerTileEntity(TilePortalManipulator.class, "epMM");
         GameRegistry.registerTileEntity(TileStabilizer.class, "epDBS");
         GameRegistry.registerTileEntity(TileStabilizerMain.class, "epDBSM");
         GameRegistry.registerTileEntity(TileTransferEnergy.class, "epTE");
@@ -141,6 +165,10 @@ public class CommonProxy
         powerMultiplier = config.get("Power", "PowerMultiplier", 1.0).getDouble(1.0);
         powerStorageMultiplier = config.get("Power", "DBSPowerStorageMultiplier", 1.0).getDouble(1.0);
         activePortalsPerRow = config.get("Portal", "ActivePortalsPerRow", 2).getInt(2);
+        updateNotifier = config.get("Misc", "NotifyOfUpdates", true).getBoolean(true);
+        vanillaRecipes = config.get("Crafting", "Vanilla", true).getBoolean(true);
+        teRecipes = config.get("Crafting", "ThermalExpansion", true).getBoolean(true);
+
         config.save();
 
         if (powerMultiplier < 0)
@@ -152,10 +180,42 @@ public class CommonProxy
         {
             powerStorageMultiplier = 0.01;
         }
+
+        try
+        {
+            URL versionIn = new URL(EnhancedPortals.UPDATE_URL);
+            BufferedReader in = new BufferedReader(new InputStreamReader(versionIn.openStream()));
+            lateVers = in.readLine();
+
+            if (FMLCommonHandler.instance().getSide() == Side.SERVER && !lateVers.equals(EnhancedPortals.VERSION))
+            {
+                EnhancedPortals.logger.info("You're using an outdated version (v" + EnhancedPortals.VERSION + "). The newest version is: " + lateVers);
+            }
+        }
+        catch (Exception e)
+        {
+            EnhancedPortals.logger.warn("Unable to get the latest version information");
+            lateVers = EnhancedPortals.VERSION;
+        }
+    }
+
+    public static boolean Notify(EntityPlayer player, String lateVers)
+    {
+        if (updateNotifier == true)
+        {
+            player.addChatMessage(new ChatComponentText("Enhanced Portals has been updated to v" + lateVers + " :: You are running v" + EnhancedPortals.VERSION));
+            return true;
+        }
+        else
+        {
+            EnhancedPortals.logger.info("You're using an outdated version (v" + EnhancedPortals.VERSION + ")");
+            return false;
+        }
     }
 
     public void setupCrafting()
     {
-        Vanilla.registerRecipes();
+        if (vanillaRecipes) Vanilla.registerRecipes();
+        if (teRecipes && Loader.isModLoaded(EnhancedPortals.MODID_THERMALEXPANSION)) ThermalExpansion.registerRecipes();
     }
 }

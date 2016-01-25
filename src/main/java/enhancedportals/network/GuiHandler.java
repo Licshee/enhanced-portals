@@ -5,10 +5,14 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.network.IGuiHandler;
 import enhancedportals.EnhancedPortals;
-import enhancedportals.client.gui.GuiDiallingDevice;
-import enhancedportals.client.gui.GuiDiallingDeviceEdit;
-import enhancedportals.client.gui.GuiDiallingDeviceManual;
-import enhancedportals.client.gui.GuiDiallingDeviceSave;
+import enhancedportals.client.gui.GuiDialingAdd;
+import enhancedportals.client.gui.GuiDialingDevice;
+import enhancedportals.client.gui.GuiDialingEdit;
+import enhancedportals.client.gui.GuiDialingEditFrame;
+import enhancedportals.client.gui.GuiDialingEditIdentifier;
+import enhancedportals.client.gui.GuiDialingEditParticle;
+import enhancedportals.client.gui.GuiDialingEditPortal;
+import enhancedportals.client.gui.GuiDialingManual;
 import enhancedportals.client.gui.GuiDimensionalBridgeStabilizer;
 import enhancedportals.client.gui.GuiManual;
 import enhancedportals.client.gui.GuiModuleManipulator;
@@ -16,22 +20,21 @@ import enhancedportals.client.gui.GuiNetworkInterface;
 import enhancedportals.client.gui.GuiNetworkInterfaceGlyphs;
 import enhancedportals.client.gui.GuiPortalController;
 import enhancedportals.client.gui.GuiPortalControllerGlyphs;
-import enhancedportals.client.gui.GuiProgrammableInterface;
-import enhancedportals.client.gui.GuiProgrammableInterfaceErrorLog;
 import enhancedportals.client.gui.GuiRedstoneInterface;
-import enhancedportals.client.gui.GuiTextureDialFrame;
-import enhancedportals.client.gui.GuiTextureDialParticle;
-import enhancedportals.client.gui.GuiTextureDialPortal;
 import enhancedportals.client.gui.GuiTextureFrame;
 import enhancedportals.client.gui.GuiTextureParticle;
 import enhancedportals.client.gui.GuiTexturePortal;
 import enhancedportals.client.gui.GuiTransferEnergy;
 import enhancedportals.client.gui.GuiTransferFluid;
 import enhancedportals.client.gui.GuiTransferItem;
-import enhancedportals.inventory.ContainerDiallingDevice;
-import enhancedportals.inventory.ContainerDiallingDeviceEdit;
-import enhancedportals.inventory.ContainerDiallingDeviceManual;
-import enhancedportals.inventory.ContainerDiallingDeviceSave;
+import enhancedportals.inventory.ContainerDialingAdd;
+import enhancedportals.inventory.ContainerDialingDevice;
+import enhancedportals.inventory.ContainerDialingEdit;
+import enhancedportals.inventory.ContainerDialingEditIdentifier;
+import enhancedportals.inventory.ContainerDialingEditParticle;
+import enhancedportals.inventory.ContainerDialingEditPortal;
+import enhancedportals.inventory.ContainerDialingEditTexture;
+import enhancedportals.inventory.ContainerDialingManual;
 import enhancedportals.inventory.ContainerDimensionalBridgeStabilizer;
 import enhancedportals.inventory.ContainerManual;
 import enhancedportals.inventory.ContainerModuleManipulator;
@@ -39,28 +42,22 @@ import enhancedportals.inventory.ContainerNetworkInterface;
 import enhancedportals.inventory.ContainerNetworkInterfaceGlyphs;
 import enhancedportals.inventory.ContainerPortalController;
 import enhancedportals.inventory.ContainerPortalControllerGlyphs;
-import enhancedportals.inventory.ContainerProgrammableInterface;
-import enhancedportals.inventory.ContainerProgrammableInterfaceErrorLog;
 import enhancedportals.inventory.ContainerRedstoneInterface;
-import enhancedportals.inventory.ContainerTextureDialFrame;
-import enhancedportals.inventory.ContainerTextureDialParticle;
-import enhancedportals.inventory.ContainerTextureDialPortal;
 import enhancedportals.inventory.ContainerTextureFrame;
 import enhancedportals.inventory.ContainerTextureParticle;
 import enhancedportals.inventory.ContainerTexturePortal;
 import enhancedportals.inventory.ContainerTransferEnergy;
 import enhancedportals.inventory.ContainerTransferFluid;
 import enhancedportals.inventory.ContainerTransferItem;
-import enhancedportals.tileentity.TileController;
-import enhancedportals.tileentity.TileDiallingDevice;
-import enhancedportals.tileentity.TileEP;
-import enhancedportals.tileentity.TileModuleManipulator;
-import enhancedportals.tileentity.TileProgrammableInterface;
-import enhancedportals.tileentity.TileRedstoneInterface;
-import enhancedportals.tileentity.TileStabilizerMain;
-import enhancedportals.tileentity.TileTransferEnergy;
-import enhancedportals.tileentity.TileTransferFluid;
-import enhancedportals.tileentity.TileTransferItem;
+import enhancedportals.tile.TileController;
+import enhancedportals.tile.TileDialingDevice;
+import enhancedportals.tile.TileEP;
+import enhancedportals.tile.TilePortalManipulator;
+import enhancedportals.tile.TileRedstoneInterface;
+import enhancedportals.tile.TileStabilizerMain;
+import enhancedportals.tile.TileTransferEnergy;
+import enhancedportals.tile.TileTransferFluid;
+import enhancedportals.tile.TileTransferItem;
 
 public class GuiHandler implements IGuiHandler
 {
@@ -68,22 +65,21 @@ public class GuiHandler implements IGuiHandler
     public static final int PORTAL_CONTROLLER_B = 1;
     public static final int NETWORK_INTERFACE_A = 2;
     public static final int NETWORK_INTERFACE_B = 3;
-    public static final int DIALLING_DEVICE_A = 4;
-    public static final int DIALLING_DEVICE_B = 5;
-    public static final int DIALLING_DEVICE_C = 6;
-    public static final int DIALLING_DEVICE_D = 7;
+    public static final int DIALING_DEVICE_A = 4;
+    public static final int DIALING_DEVICE_B = 5;
+    public static final int DIALING_DEVICE_C = 6;
+    public static final int DIALING_DEVICE_D = 7;
+    public static final int DIALING_DEVICE_E = 26;
     public static final int TEXTURE_A = 8;
     public static final int TEXTURE_B = 9;
     public static final int TEXTURE_C = 10;
-    public static final int TEXTURE_DIALLING_EDIT_A = 11;
-    public static final int TEXTURE_DIALLING_EDIT_B = 12;
-    public static final int TEXTURE_DIALLING_EDIT_C = 13;
-    public static final int TEXTURE_DIALLING_SAVE_A = 14;
-    public static final int TEXTURE_DIALLING_SAVE_B = 15;
-    public static final int TEXTURE_DIALLING_SAVE_C = 16;
+    public static final int TEXTURE_DIALING_EDIT_A = 11;
+    public static final int TEXTURE_DIALING_EDIT_B = 12;
+    public static final int TEXTURE_DIALING_EDIT_C = 13;
+    public static final int TEXTURE_DIALING_SAVE_A = 14;
+    public static final int TEXTURE_DIALING_SAVE_B = 15;
+    public static final int TEXTURE_DIALING_SAVE_C = 16;
     public static final int REDSTONE_INTERFACE = 17;
-    public static final int PROGRAMMABLE_INTERFACE = 18;
-    public static final int PROGRAMMABLE_INTERFACE_ERRORS = 19;
     public static final int MODULE_MANIPULATOR = 20;
     public static final int TRANSFER_FLUID = 21;
     public static final int TRANSFER_ENERGY = 22;
@@ -135,27 +131,31 @@ public class GuiHandler implements IGuiHandler
         }
         else if (ID == MODULE_MANIPULATOR)
         {
-            return new GuiModuleManipulator((TileModuleManipulator) tile, player);
+            return new GuiModuleManipulator((TilePortalManipulator) tile, player);
         }
         else if (ID == DIMENSIONAL_BRIDGE_STABILIZER)
         {
             return new GuiDimensionalBridgeStabilizer((TileStabilizerMain) tile, player);
         }
-        else if (ID == DIALLING_DEVICE_A)
+        else if (ID == DIALING_DEVICE_A)
         {
-            return new GuiDiallingDevice((TileDiallingDevice) tile, player);
+            return new GuiDialingDevice((TileDialingDevice) tile, player);
         }
-        else if (ID == DIALLING_DEVICE_B)
+        else if (ID == DIALING_DEVICE_B)
         {
-            return new GuiDiallingDeviceManual((TileDiallingDevice) tile, player);
+            return new GuiDialingManual((TileDialingDevice) tile, player);
         }
-        else if (ID == DIALLING_DEVICE_C)
+        else if (ID == DIALING_DEVICE_C)
         {
-            return new GuiDiallingDeviceSave((TileDiallingDevice) tile, player);
+            return new GuiDialingAdd((TileDialingDevice) tile, player);
         }
-        else if (ID == DIALLING_DEVICE_D)
+        else if (ID == DIALING_DEVICE_D)
         {
-            return new GuiDiallingDeviceEdit((TileDiallingDevice) tile, player);
+            return new GuiDialingEdit((TileDialingDevice) tile, player);
+        }
+        else if (ID == DIALING_DEVICE_E)
+        {
+            return new GuiDialingEditIdentifier((TileDialingDevice) tile, player);
         }
         else if (ID == TEXTURE_A)
         {
@@ -169,37 +169,29 @@ public class GuiHandler implements IGuiHandler
         {
             return new GuiTextureParticle((TileController) tile, player);
         }
-        else if (ID == TEXTURE_DIALLING_SAVE_A)
+        else if (ID == TEXTURE_DIALING_SAVE_A)
         {
-            return new GuiTextureDialFrame((TileDiallingDevice) tile, player, false);
+            return new GuiDialingEditFrame((TileDialingDevice) tile, player, false);
         }
-        else if (ID == TEXTURE_DIALLING_SAVE_B)
+        else if (ID == TEXTURE_DIALING_SAVE_B)
         {
-            return new GuiTextureDialPortal((TileDiallingDevice) tile, player, false);
+            return new GuiDialingEditPortal((TileDialingDevice) tile, player, false);
         }
-        else if (ID == TEXTURE_DIALLING_SAVE_C)
+        else if (ID == TEXTURE_DIALING_SAVE_C)
         {
-            return new GuiTextureDialParticle((TileDiallingDevice) tile, player, false);
+            return new GuiDialingEditParticle((TileDialingDevice) tile, player, false);
         }
-        else if (ID == TEXTURE_DIALLING_EDIT_A)
+        else if (ID == TEXTURE_DIALING_EDIT_A)
         {
-            return new GuiTextureDialFrame((TileDiallingDevice) tile, player, true);
+            return new GuiDialingEditFrame((TileDialingDevice) tile, player, true);
         }
-        else if (ID == TEXTURE_DIALLING_EDIT_B)
+        else if (ID == TEXTURE_DIALING_EDIT_B)
         {
-            return new GuiTextureDialPortal((TileDiallingDevice) tile, player, true);
+            return new GuiDialingEditPortal((TileDialingDevice) tile, player, true);
         }
-        else if (ID == TEXTURE_DIALLING_EDIT_C)
+        else if (ID == TEXTURE_DIALING_EDIT_C)
         {
-            return new GuiTextureDialParticle((TileDiallingDevice) tile, player, true);
-        }
-        else if (ID == PROGRAMMABLE_INTERFACE)
-        {
-            return new GuiProgrammableInterface((TileProgrammableInterface) tile, player);
-        }
-        else if (ID == PROGRAMMABLE_INTERFACE_ERRORS)
-        {
-            return new GuiProgrammableInterfaceErrorLog((TileProgrammableInterface) tile, player);
+            return new GuiDialingEditParticle((TileDialingDevice) tile, player, true);
         }
         else if (ID == TRANSFER_FLUID)
         {
@@ -256,27 +248,31 @@ public class GuiHandler implements IGuiHandler
         }
         else if (ID == MODULE_MANIPULATOR)
         {
-            return new ContainerModuleManipulator((TileModuleManipulator) tile, player.inventory);
+            return new ContainerModuleManipulator((TilePortalManipulator) tile, player.inventory);
         }
         else if (ID == DIMENSIONAL_BRIDGE_STABILIZER)
         {
             return new ContainerDimensionalBridgeStabilizer((TileStabilizerMain) tile, player.inventory);
         }
-        else if (ID == DIALLING_DEVICE_A)
+        else if (ID == DIALING_DEVICE_A)
         {
-            return new ContainerDiallingDevice((TileDiallingDevice) tile, player.inventory);
+            return new ContainerDialingDevice((TileDialingDevice) tile, player.inventory);
         }
-        else if (ID == DIALLING_DEVICE_B)
+        else if (ID == DIALING_DEVICE_B)
         {
-            return new ContainerDiallingDeviceManual((TileDiallingDevice) tile, player.inventory);
+            return new ContainerDialingManual((TileDialingDevice) tile, player.inventory);
         }
-        else if (ID == DIALLING_DEVICE_C)
+        else if (ID == DIALING_DEVICE_C)
         {
-            return new ContainerDiallingDeviceSave((TileDiallingDevice) tile, player.inventory);
+            return new ContainerDialingAdd((TileDialingDevice) tile, player.inventory);
         }
-        else if (ID == DIALLING_DEVICE_D)
+        else if (ID == DIALING_DEVICE_D)
         {
-            return new ContainerDiallingDeviceEdit((TileDiallingDevice) tile, player.inventory);
+            return new ContainerDialingEdit((TileDialingDevice) tile, player.inventory);
+        }
+        else if (ID == DIALING_DEVICE_E)
+        {
+            return new ContainerDialingEditIdentifier((TileDialingDevice) tile, player.inventory);
         }
         else if (ID == TEXTURE_A)
         {
@@ -290,25 +286,17 @@ public class GuiHandler implements IGuiHandler
         {
             return new ContainerTextureParticle((TileController) tile, player.inventory);
         }
-        else if (ID == TEXTURE_DIALLING_EDIT_A || ID == TEXTURE_DIALLING_SAVE_A)
+        else if (ID == TEXTURE_DIALING_EDIT_A || ID == TEXTURE_DIALING_SAVE_A)
         {
-            return new ContainerTextureDialFrame((TileDiallingDevice) tile, player.inventory);
+            return new ContainerDialingEditTexture((TileDialingDevice) tile, player.inventory);
         }
-        else if (ID == TEXTURE_DIALLING_EDIT_B || ID == TEXTURE_DIALLING_SAVE_B)
+        else if (ID == TEXTURE_DIALING_EDIT_B || ID == TEXTURE_DIALING_SAVE_B)
         {
-            return new ContainerTextureDialPortal((TileDiallingDevice) tile, player.inventory);
+            return new ContainerDialingEditPortal((TileDialingDevice) tile, player.inventory);
         }
-        else if (ID == TEXTURE_DIALLING_EDIT_C || ID == TEXTURE_DIALLING_SAVE_C)
+        else if (ID == TEXTURE_DIALING_EDIT_C || ID == TEXTURE_DIALING_SAVE_C)
         {
-            return new ContainerTextureDialParticle((TileDiallingDevice) tile, player.inventory);
-        }
-        else if (ID == PROGRAMMABLE_INTERFACE)
-        {
-            return new ContainerProgrammableInterface((TileProgrammableInterface) tile, player.inventory);
-        }
-        else if (ID == PROGRAMMABLE_INTERFACE_ERRORS)
-        {
-            return new ContainerProgrammableInterfaceErrorLog((TileProgrammableInterface) tile, player.inventory);
+            return new ContainerDialingEditParticle((TileDialingDevice) tile, player.inventory);
         }
         else if (ID == TRANSFER_FLUID)
         {

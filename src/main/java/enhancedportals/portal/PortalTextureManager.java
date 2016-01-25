@@ -5,7 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import cpw.mods.fml.common.network.ByteBufUtils;
-import enhancedportals.tileentity.TileController;
+import enhancedportals.tile.TileController;
 
 public class PortalTextureManager
 {
@@ -40,6 +40,10 @@ public class PortalTextureManager
     {
         this();
         this.controller = controller;
+    }
+    
+    public boolean isDefault() {
+    	return frameColour == 0xffffff && portalColour == 0xffffff && particleColour == 0x0077D8 && particleType == 0 && customFrameTexture == -1 && customPortalTexture == -1 && inventory[0] == null && inventory[1] == null;
     }
 
     public int getCustomFrameTexture()

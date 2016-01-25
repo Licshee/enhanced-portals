@@ -1,9 +1,11 @@
-EnhancedPortals 3
----
+![logo](http://mods.atomicbase.com/enhancedportals/forum_files/ep_banner.png)
+[![Build Status](https://travis-ci.org/enhanced-portals/enhanced-portals.svg?branch=master)](https://travis-ci.org/enhanced-portals/enhanced-portals)
+
 Useful Links:
-* [Downloads](http://shadeddimensions.co.uk/enhancedportals-3/downloads/)
-* [Changelog](http://shadeddimensions.co.uk/enhancedportals-3/changelog/)
-* [Minecraft Forums Thread](http://www.minecraftforum.net/topic/2143651-164-enhancedportals-3/)
+* [License](docs/LICENSE)
+* [Downloads](http://www.curse.com/mc-mods/minecraft/225921-enhanced-portals-3#t1:other-downloads)
+* [Changelog](docs/changelog/)
+* [Minecraft Forums Thread](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1292751)
 
 
 ###Compiling

@@ -5,10 +5,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import enhancedportals.EnhancedPortals;
 import enhancedportals.client.gui.elements.ElementRedstoneFlux;
+import enhancedportals.client.gui.elements.ElementScrollDiallingDevice;
 import enhancedportals.client.gui.tabs.TabRedstoneFlux;
+import enhancedportals.client.gui.tabs.TabTip;
 import enhancedportals.inventory.ContainerDimensionalBridgeStabilizer;
 import enhancedportals.network.packet.PacketGuiData;
-import enhancedportals.tileentity.TileStabilizerMain;
+import enhancedportals.tile.TileStabilizerMain;
 import enhancedportals.utility.GeneralUtils;
 
 public class GuiDimensionalBridgeStabilizer extends BaseGui
@@ -27,10 +29,12 @@ public class GuiDimensionalBridgeStabilizer extends BaseGui
     @Override
     protected void actionPerformed(GuiButton button)
     {
-        if (button.id == 0)
-        {
+    	// Triggered when the + and - buttons are pushed for Instability.
+        if((button.id == 0)||(button.id == 1)){
+        	String key=(button.id==0?"increase":"decrease")+"_powerState";
             NBTTagCompound tag = new NBTTagCompound();
-            tag.setBoolean("button", false);
+            tag.setBoolean(key, false);
+            // Sent to ContainerDBS.java.
             EnhancedPortals.packetPipeline.sendToServer(new PacketGuiData(tag));
         }
     }
@@ -42,8 +46,12 @@ public class GuiDimensionalBridgeStabilizer extends BaseGui
         
         if (GeneralUtils.hasEnergyCost())
         {
-            buttonList.add(new GuiButton(0, guiLeft + 7, guiTop + containerSize - 27, 140, 20, stabilizer.powerState == 0 ? EnhancedPortals.localize("gui.powerModeNormal") : stabilizer.powerState == 1 ? EnhancedPortals.localize("gui.powerModeRisky") : stabilizer.powerState == 2 ? EnhancedPortals.localize("gui.powerModeUnstable") : EnhancedPortals.localize("gui.powerModeUnpredictable")));
+        	GuiButton add_risk=new GuiButton(0,guiLeft+65,guiTop+containerSize-53,10,10,"+");
+        	GuiButton minus_risk=new GuiButton(1,guiLeft+77,guiTop+containerSize-53,10,10,"-");
+            buttonList.add(add_risk);
+            buttonList.add(minus_risk);
             addElement(new ElementRedstoneFlux(this, xSize - 23, 18, stabilizer.getEnergyStorage()));
+            //addElement(new ElementScrollStabilizer(this, stabilizer, 7, 28));
             addTab(new TabRedstoneFlux(this, stabilizer));
         }
     }
@@ -66,7 +74,7 @@ public class GuiDimensionalBridgeStabilizer extends BaseGui
         getFontRenderer().drawString(EnhancedPortals.localize("gui.information"), 8, 18, 0x404040);
         getFontRenderer().drawString(EnhancedPortals.localize("gui.activePortals"), 12, 28, 0x777777);
         getFontRenderer().drawString(s1, xSize - 27 - getFontRenderer().getStringWidth(s1), 28, 0x404040);
-        
+
         if (GeneralUtils.hasEnergyCost())
         {
             int instability = stabilizer.powerState == 0 ? stabilizer.instability : stabilizer.powerState == 1 ? 20 : stabilizer.powerState == 2 ? 50 : 70;
@@ -81,10 +89,9 @@ public class GuiDimensionalBridgeStabilizer extends BaseGui
     public void updateScreen()
     {
         super.updateScreen();
-        
-        if (GeneralUtils.hasEnergyCost())
-        {
-            ((GuiButton) buttonList.get(0)).displayString = stabilizer.powerState == 0 ? EnhancedPortals.localize("gui.powerModeNormal") : stabilizer.powerState == 1 ? EnhancedPortals.localize("gui.powerModeRisky") : stabilizer.powerState == 2 ? EnhancedPortals.localize("gui.powerModeUnstable") : EnhancedPortals.localize("gui.powerModeUnpredictable");
-        }
+        /*
+        if (GeneralUtils.hasEnergyCost()){
+        	((GuiButton) buttonList.get(0)).displayString=getPowerStateLocString();
+        }*/
     }
 }
